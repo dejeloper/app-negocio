@@ -6,7 +6,11 @@ module.exports = {
     './public/**/*.html'
   ],
   theme: {
-    extend: {}
+    extend: {
+      fontFamily: {
+        roboto: ['Roboto', 'sans-serif']
+      }
+    }
   },
   plugins: [
   ]
