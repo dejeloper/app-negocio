@@ -1,31 +1,50 @@
-import { FC, useState } from 'react';
+import { FC, Fragment, useState } from 'react';
 import Image from 'next/image';
+import { Menu } from '@headlessui/react'
 
 interface Props {
   userName: string,
-  userImg: string
+  userImg: string,
+  userEmail: string
 }
 
-export const NavbarUserProfile: FC<Props> = ({ userName, userImg }) => {
-  const [userMenuToggle, setUserMenuToggle] = useState(false)
-
-  const MenuToggle = () => {
-    setUserMenuToggle(!userMenuToggle)
-  }
+export const NavbarUserProfile: FC<Props> = ({ userName, userImg, userEmail }) => {
+  const links = [
+    { href: '/profile', label: 'Mi Perfil' },
+    { href: '/workplace', label: 'Sitio de Trabajo' },
+    { href: '/password', label: 'Cambio Contraseña' },
+  ]
 
   return (
     <>
-      <div className='relative'>
-        <button className="rounded-full" id="user-menu-button" aria-expanded="false" aria-haspopup="true" >
-          <Image src={userImg} alt={`Foto de Perfil de ${userName}`} width={48} height={48} className="rounded-full" onClick={MenuToggle} />
-        </button>
-      </div>
-      {userMenuToggle &&
-        <div className='absolute right-0 z-10 mt-24 w-48 origin-top-right rounded-sm bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
-          <a href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex={-1} id="user-menu-item-0">Your Profile</a>
-          <a href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex={-1} id="user-menu-item-1">Settings</a>
-          <a href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex={-1} id="user-menu-item-2">Sign out</a>
-        </div>}
+      <Menu>
+        <Menu.Button className="relative">
+          <Image id="avatarButton" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" className="w-10 h-10 rounded-full cursor-pointer" src={userImg} width={100} height={100} alt="User dropdown" />
+        </Menu.Button>
+        <Menu.Items className="absolute top-0 right-0 mt-16 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+          <div className="px-4 py-3 text-sm text-gray-900">
+            <div>{userName}</div>
+            <div className="font-medium truncate">{userEmail}</div>
+          </div>
+          <div className='py-2 text-sm text-gray-700'>
+            {links.map((link) => (
+              <Menu.Item key={link.href} as={Fragment}>
+                {({ active }) => (
+                  <a
+                    href={link.href}
+                    className="block px-4 py-2 text-sm hover:bg-cyan-600 hover:text-white"
+                  >
+                    {link.label}
+                  </a>
+                )}
+              </Menu.Item>
+            ))}
+          </div>
+          <div className="py-1">
+            <a href="#" className="block px-4 py-2 text-sm hover:bg-cyan-600 hover:text-white">Cerrar Sesión</a>
+          </div>
+        </Menu.Items>
+      </Menu>
     </>
   )
 }
